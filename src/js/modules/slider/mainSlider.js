@@ -1,8 +1,11 @@
 import Slider from "./slider";
 
 export default class MainSlider extends Slider {
-    constructor(btns) {
-        super(btns);
+    constructor(prevBtns, nextBtns) {
+        super(prevBtns, nextBtns);
+        try {
+            this.popup = document.querySelector('.hanson');
+        } catch (e) {}
     }
 
     showSlide(n) {
@@ -25,33 +28,40 @@ export default class MainSlider extends Slider {
         this.showSlide(this.slideInex += n);
     }
 
-    showPopup(popup) {
-        if (this.slideInex === 3) {
-            setTimeout(() => {
-                popup.classList.add('animated', 'fadeInUp');
-                popup.style.display = 'block';
-            }, 3000)
-        } else {
-            popup.style.display = 'none';
-            popup.classList.remove('animated', 'fadeInUp');
+    showPopup() {
+        if (this.popup) {
+            if (this.slideInex === 3) {
+                setTimeout(() => {
+                    this.popup.classList.add('animated', 'fadeInUp');
+                    this.popup.style.display = 'block';
+                }, 3000)
+            } else {
+                this.popup.style.display = 'none';
+                this.popup.classList.remove('animated', 'fadeInUp');
+            }
         }
     }
 
     render() {
-
-        this.showSlide(this.slideInex);
-        this.btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.plusSlide(1);
-                try {
-                    this.popup = document.querySelector('.hanson');
-                    this.showPopup(this.popup);
-                } catch (e) {}
+        if (this.container) {
+            this.showSlide(this.slideInex);
+            this.nextBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.plusSlide(1);                        
+                    this.showPopup();
+                });
+                btn.parentNode.previousElementSibling.addEventListener('click', () => {
+                    this.slideInex = 1;
+                    this.showSlide(this.slideInex);
+                })
             });
-            btn.parentNode.previousElementSibling.addEventListener('click', () => {
-                this.slideInex = 1;
-                this.showSlide(this.slideInex);
-            })
-        });
+        
+        
+            try {
+                this.prevBtns.forEach(btn => {
+                    btn.addEventListener('click', () => this.plusSlide(-1));
+                })
+            } catch (e) { console.log(e); }
+        }    
     }
 }

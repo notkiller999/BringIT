@@ -1,8 +1,8 @@
 import Slider from "./slider";
 
 export default class MiniSlider extends Slider {
-    constructor(container, nextBtn, prevBtn, animation, autoplay, activeClass, remove) {
-        super(container, nextBtn, prevBtn, animation, autoplay, activeClass, remove);
+    constructor(container, nextBtns, prevBtns, animation, autoplay, activeClass, remove) {
+        super(container, nextBtns, prevBtns, animation, autoplay, activeClass, remove);
     }
 
     decorizeSlide() {
@@ -47,21 +47,27 @@ export default class MiniSlider extends Slider {
     
 
     init() {
-        this.container.style.cssText = `
+        try {
+            this.container.style.cssText = `
             display: flex;
             flex-wrap: wrap;
             overflow: hidden;
             align-items: flex-start;
         `;
-        this.nextBtn.addEventListener('click', () => {
-            this.nextSlide();
-        });
+            this.nextBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.nextSlide();
+                });
+            })
 
-        this.prevBtn.addEventListener('click', () => {
-            this.prevSlide();
-        });
+            this.prevBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.prevSlide();
+                });
+            })
 
-        this.decorizeSlide();
+            this.decorizeSlide();
+        } catch(e) {}
     }
 
 
